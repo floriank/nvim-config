@@ -18,12 +18,22 @@ return require('packer').startup(function(use)
   })
 
   use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate'})
+  use {
+      "romgrk/nvim-treesitter-context",
+      after = "nvim-treesitter", -- Load after Tree-sitter
+      config = function()
+          require("treesitter-context").setup {
+              enable = true, -- Enable Tree-sitter-context
+          }
+      end,
+  }
   use('nvim-treesitter/playground')
   use('theprimeagen/harpoon')
   use('theprimeagen/vim-be-good')
 
   use('mbbill/undotree')
   use('tpope/vim-fugitive')
+  use('tpope/vim-surround')
   use('knsh14/vim-github-link')
 
   use {
