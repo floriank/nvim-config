@@ -28,6 +28,7 @@ return require('packer').startup(function(use)
       end,
   }
   use('nvim-treesitter/playground')
+
   use('theprimeagen/harpoon')
   use('theprimeagen/vim-be-good')
 
@@ -35,7 +36,9 @@ return require('packer').startup(function(use)
   use('tpope/vim-fugitive')
   use('tpope/vim-surround')
   use('knsh14/vim-github-link')
-
+  use('tpope/vim-commentary')
+  use('tpope/vim-unimpaired')
+  use('tpope/vim-surround')
   use {
 	  'VonHeikemen/lsp-zero.nvim',
 	  branch = 'v2.x',
