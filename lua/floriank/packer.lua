@@ -13,7 +13,7 @@ return require('packer').startup(function(use)
 	  'rose-pine/neovim',
 	  as = 'rose-pine',
 	  config = function()
-		  vim.cmd('colorscheme rose-pine')
+		  vim.cmd('colorscheme rose-pine-moon')
 	  end
   })
 
@@ -38,7 +38,7 @@ return require('packer').startup(function(use)
   use('knsh14/vim-github-link')
   use('tpope/vim-commentary')
   use('tpope/vim-unimpaired')
-  use('tpope/vim-surround')
+  use('tpope/vim-rails')
   use {
 	  'VonHeikemen/lsp-zero.nvim',
 	  branch = 'v2.x',
