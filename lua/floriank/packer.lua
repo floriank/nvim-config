@@ -39,6 +39,9 @@ return require('packer').startup(function(use)
   use('tpope/vim-commentary')
   use('tpope/vim-unimpaired')
   use('tpope/vim-rails')
+  use('tpope/vim-bundler')
+  use('tpope/vim-dispatch')
+  use('tpope/vim-abolish')
   use {
 	  'VonHeikemen/lsp-zero.nvim',
 	  branch = 'v2.x',
