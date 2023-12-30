@@ -16,6 +16,7 @@ return require('packer').startup(function(use)
 		  vim.cmd('colorscheme rose-pine-moon')
 	  end
   })
+
   -- treesitter for syntax highlighting
   use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate'})
   use {
@@ -35,6 +36,7 @@ return require('packer').startup(function(use)
 
   -- better undo history
   use('mbbill/undotree')
+
   -- the tpope section
   use('tpope/vim-fugitive')
   use('tpope/vim-surround')
@@ -44,8 +46,10 @@ return require('packer').startup(function(use)
   use('tpope/vim-bundler')
   use('tpope/vim-dispatch')
   use('tpope/vim-abolish')
+
   -- github linking
   use('knsh14/vim-github-link')
+
   -- LSP integration
   use {
       'VonHeikemen/lsp-zero.nvim',
@@ -62,8 +66,7 @@ return require('packer').startup(function(use)
           {'L3MON4D3/LuaSnip'},     -- Required
       }
   }
-  -- markdown completions
-  use('hrsh7th/nvim-cmp')
+
   -- note taking
   use({
       "epwalsh/obsidian.nvim",
@@ -81,14 +84,13 @@ return require('packer').startup(function(use)
                       name = "personal",
                       path = "~/vaults/personal",
                   },
-                  {
-                      name = "work",
-                      path = "~/vaults/work",
-                  },
               },
               -- more options go below
           })
       end,
   })
+
+  -- cmd line via telescope
+  use("jonarrien/telescope-cmdline.nvim")
 end)
 
