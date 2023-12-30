@@ -16,7 +16,7 @@ return require('packer').startup(function(use)
 		  vim.cmd('colorscheme rose-pine-moon')
 	  end
   })
-
+  -- treesitter for syntax highlighting
   use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate'})
   use {
       "romgrk/nvim-treesitter-context",
@@ -29,33 +29,66 @@ return require('packer').startup(function(use)
   }
   use('nvim-treesitter/playground')
 
+  -- faster switching and vim training
   use('theprimeagen/harpoon')
   use('theprimeagen/vim-be-good')
 
+  -- better undo history
   use('mbbill/undotree')
+  -- the tpope section
   use('tpope/vim-fugitive')
   use('tpope/vim-surround')
-  use('knsh14/vim-github-link')
   use('tpope/vim-commentary')
   use('tpope/vim-unimpaired')
   use('tpope/vim-rails')
   use('tpope/vim-bundler')
   use('tpope/vim-dispatch')
   use('tpope/vim-abolish')
+  -- github linking
+  use('knsh14/vim-github-link')
+  -- LSP integration
   use {
-	  'VonHeikemen/lsp-zero.nvim',
-	  branch = 'v2.x',
-	  requires = {
-		  -- LSP Support
-		  {'neovim/nvim-lspconfig'},             -- Required
-		  {'williamboman/mason.nvim'},           -- Optional
-		  {'williamboman/mason-lspconfig.nvim'}, -- Optional
+      'VonHeikemen/lsp-zero.nvim',
+      branch = 'v2.x',
+      requires = {
+          -- LSP Support
+          {'neovim/nvim-lspconfig'},             -- Required
+          {'williamboman/mason.nvim'},           -- Optional
+          {'williamboman/mason-lspconfig.nvim'}, -- Optional
 
-		  -- Autocompletion
-		  {'hrsh7th/nvim-cmp'},     -- Required
-		  {'hrsh7th/cmp-nvim-lsp'}, -- Required
-		  {'L3MON4D3/LuaSnip'},     -- Required
-	  }
+          -- Autocompletion
+          {'hrsh7th/nvim-cmp'},     -- Required
+          {'hrsh7th/cmp-nvim-lsp'}, -- Required
+          {'L3MON4D3/LuaSnip'},     -- Required
+      }
   }
+  -- markdown completions
+  use('hrsh7th/nvim-cmp')
+  -- note taking
+  use({
+      "epwalsh/obsidian.nvim",
+      tag = "*",  -- recommended, use latest release instead of latest commit
+      requires = {
+          -- Required.
+          "nvim-lua/plenary.nvim",
+
+          -- see below for full list of optional dependencies 👇
+      },
+      config = function()
+          require("obsidian").setup({
+              workspaces = {
+                  {
+                      name = "personal",
+                      path = "~/vaults/personal",
+                  },
+                  {
+                      name = "work",
+                      path = "~/vaults/work",
+                  },
+              },
+              -- more options go below
+          })
+      end,
+  })
 end)
 
