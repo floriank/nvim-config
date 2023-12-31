@@ -9,6 +9,7 @@ return require('packer').startup(function(use)
 	  -- or                            , branch = '0.1.x',
 	  requires = { {'nvim-lua/plenary.nvim'} }
   }
+  use('benfowler/telescope-luasnip.nvim')
   use({
 	  'rose-pine/neovim',
 	  as = 'rose-pine',
@@ -63,9 +64,12 @@ return require('packer').startup(function(use)
           -- Autocompletion
           {'hrsh7th/nvim-cmp'},     -- Required
           {'hrsh7th/cmp-nvim-lsp'}, -- Required
-          {'L3MON4D3/LuaSnip'},     -- Required
+          {'saadparwaiz1/cmp_luasnip'}
       }
   }
+
+  -- snippets
+  use {'L3MON4D3/LuaSnip', requires = {'rafamadriz/friendly-snippets'}}
 
   -- note taking
   use({
