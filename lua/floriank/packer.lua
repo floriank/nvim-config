@@ -28,7 +28,7 @@ return require('packer').startup(function(use)
           }
       end,
   }
-  use('nvim-treesitter/playground')
+  -- use('nvim-treesitter/playground')
 
   -- faster switching and vim training
   use('theprimeagen/harpoon')
