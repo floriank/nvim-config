@@ -94,7 +94,7 @@ return require('packer').startup(function(use)
       end,
   })
 
-  -- cmd line via telescope
-  use("jonarrien/telescope-cmdline.nvim")
+  -- emmet
+  use "mattn/emmet-vim"
 end)
 
