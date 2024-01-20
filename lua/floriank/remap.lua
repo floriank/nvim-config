@@ -1,6 +1,6 @@
 vim.g.mapleader = ' ';
 
-vim.keymap.set('n', '<leader>pv', vim.cmd.Ex);
+vim.keymap.set('n', '<leader>pv', vim.cmd.Rex);
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
@@ -40,3 +40,6 @@ vim.keymap.set("n", "<Down>", "<nop>")
 
 -- set jk to exit insert mode
 vim.keymap.set("i", "jk", "<Esc>", { noremap = true })
+
+-- easier writes
+vim.keymap.set("n", "<leader>w", ":w<CR>")
