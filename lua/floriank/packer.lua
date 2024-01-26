@@ -43,7 +43,7 @@ return require('packer').startup(function(use)
   use('tpope/vim-surround')
   use('tpope/vim-commentary')
   use('tpope/vim-unimpaired')
-  use('tpope/vim-rails')
+  -- use('tpope/vim-rails')
   use('tpope/vim-bundler')
   use('tpope/vim-dispatch')
   use('tpope/vim-abolish')
@@ -96,5 +96,6 @@ return require('packer').startup(function(use)
 
   -- emmet
   use "mattn/emmet-vim"
+
 end)
 
