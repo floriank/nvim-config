@@ -96,4 +96,8 @@ return require('packer').startup(function(use)
 
     -- emmet
     use "mattn/emmet-vim"
+    -- markdown
+    use {
+        'gabrielelana/vim-markdown',
+    }
 end)
