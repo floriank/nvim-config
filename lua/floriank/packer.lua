@@ -47,6 +47,8 @@ return require('packer').startup(function(use)
     use('tpope/vim-bundler')
     use('tpope/vim-dispatch')
     use('tpope/vim-abolish')
+    use('tpope/vim-dadbod')
+    use('kristijanhusak/vim-dadbod-ui')
 
     -- github linking
     use('knsh14/vim-github-link')
