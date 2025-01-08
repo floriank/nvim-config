@@ -47,8 +47,6 @@ return require('packer').startup(function(use)
     use('tpope/vim-bundler')
     use('tpope/vim-dispatch')
     use('tpope/vim-abolish')
-    use('tpope/vim-dadbod')
-    use('kristijanhusak/vim-dadbod-ui')
 
     -- github linking
     use('knsh14/vim-github-link')
@@ -72,29 +70,6 @@ return require('packer').startup(function(use)
 
     -- snippets
     use { 'L3MON4D3/LuaSnip', requires = { 'rafamadriz/friendly-snippets' } }
-
-    -- note taking
-    use({
-        "epwalsh/obsidian.nvim",
-        tag = "*", -- recommended, use latest release instead of latest commit
-        requires = {
-            -- Required.
-            "nvim-lua/plenary.nvim",
-
-            -- see below for full list of optional dependencies 👇
-        },
-        config = function()
-            require("obsidian").setup({
-                workspaces = {
-                    {
-                        name = "personal",
-                        path = "~/vaults/personal",
-                    },
-                },
-                -- more options go below
-            })
-        end,
-    })
 
     -- emmet
     use "mattn/emmet-vim"
