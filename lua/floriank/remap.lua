@@ -38,8 +38,5 @@ vim.keymap.set("n", "<Right>", "<nop>")
 vim.keymap.set("n", "<Up>", "<nop>")
 vim.keymap.set("n", "<Down>", "<nop>")
 
--- set jk to exit insert mode
-vim.keymap.set("i", "jk", "<Esc>", { noremap = true })
-
 -- easier writes
 vim.keymap.set("n", "<leader>w", ":w<CR>")
