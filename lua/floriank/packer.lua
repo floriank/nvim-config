@@ -77,4 +77,8 @@ return require('packer').startup(function(use)
     use {
         'gabrielelana/vim-markdown',
     }
+    -- whitespace
+    use {
+       'thirtythreeforty/lessspace.vim'
+    }
 end)

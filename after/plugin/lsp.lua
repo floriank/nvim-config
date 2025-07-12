@@ -9,6 +9,10 @@ local has_words_before = function()
 end
 
 cmp.setup({
+    performance = {
+        debounce = 60,
+        throttle = 30,
+    },
     window = {
         documentation = cmp.config.window.bordered(),
     },
