@@ -10,8 +10,12 @@ end
 
 cmp.setup({
     performance = {
-        debounce = 60,
-        throttle = 30,
+        debounce = 60,          -- Wait 60ms before triggering completion
+        throttle = 30,          -- Limit completion requests per second
+        fetching_timeout = 500, -- 500ms timeout for fetching completion items
+        confirm_resolve_timeout = 80,
+        async_budget = 1,
+        max_view_entries = 200, -- Limit number of completion items shown
     },
     window = {
         documentation = cmp.config.window.bordered(),
@@ -20,31 +24,31 @@ cmp.setup({
 
         ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
         ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-        ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+        ['<Enter>'] = cmp.mapping.confirm({ select = true }),
         ['<C-Space>'] = cmp.mapping.select_next_item(),
-        ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-                -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-                -- that way you will only jump inside the snippet region
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-            elseif has_words_before() then
-                cmp.complete()
-            else
-                fallback()
-            end
-        end, { "i", "s" }),
+        -- ["<Tab>"] = cmp.mapping(function(fallback)
+        --     if cmp.visible() then
+        --         cmp.select_next_item()
+        --         -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+        --         -- that way you will only jump inside the snippet region
+        --     elseif luasnip.expand_or_jumpable() then
+        --         luasnip.expand_or_jump()
+        --     elseif has_words_before() then
+        --         cmp.complete()
+        --     else
+        --         fallback()
+        --     end
+        -- end, { "i", "s" }),
 
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
-            else
-                fallback()
-            end
-        end, { "i", "s" }),
+        -- ["<S-Tab>"] = cmp.mapping(function(fallback)
+        --     if cmp.visible() then
+        --         cmp.select_prev_item()
+        --     elseif luasnip.jumpable(-1) then
+        --         luasnip.jump(-1)
+        --     else
+        --         fallback()
+        --     end
+        -- end, { "i", "s" }),
         -- ['<C-f>'] = cmp_action.luasnip_jump_forward(),
         -- ['<C-b>'] = cmp_action.luasnip_jump_backward(),
         -- ['<C-u>'] = cmp.mapping.scroll_docs(-4),
@@ -142,3 +146,6 @@ end
 --     setup_diagnostics(client, buffer)
 --   end,
 -- })
+
+-- wasm language tooling
+require("lspconfig").wasm_language_tools.setup({})

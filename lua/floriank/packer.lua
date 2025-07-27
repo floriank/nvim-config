@@ -79,6 +79,13 @@ return require('packer').startup(function(use)
     }
     -- whitespace
     use {
-       'thirtythreeforty/lessspace.vim'
+        'thirtythreeforty/lessspace.vim'
+    }
+    -- hardtime
+    use {
+        "m4xshen/hardtime.nvim",
+        lazy = false,
+        requires = { "MunifTanjim/nui.nvim" },
+        opts = {},
     }
 end)
