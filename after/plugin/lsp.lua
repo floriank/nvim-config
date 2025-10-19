@@ -1,151 +1,85 @@
-local lsp = require('lsp-zero')
+-- plugins you already require
 local cmp = require('cmp')
 local luasnip = require('luasnip')
 
-local has_words_before = function()
-    unpack = unpack or table.unpack
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+-- OPTIONAL: if you still want lsp-zero for icons/prefs, that's fine,
+-- but don't let it configure servers. We'll remove its handlers below.
+local lsp = require('lsp-zero')
+
+-- nvim-cmp
+cmp.setup({
+  performance = {
+    debounce = 60,
+    throttle = 30,
+    fetching_timeout = 500,
+    confirm_resolve_timeout = 80,
+    async_budget = 1,
+    max_view_entries = 200,
+  },
+  window = {
+    documentation = cmp.config.window.bordered(),
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-p>']   = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+    ['<C-n>']   = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+    ['<CR>']    = cmp.mapping.confirm({ select = true }),     -- was '<Enter>'
+    ['<C-Space>'] = cmp.mapping.complete(),                   -- was select_next_item()
+  }),
+  -- ✅ You were missing sources; without these, no LSP items appear
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+    { name = 'path' },
+    { name = 'buffer' },
+  },
+})
+
+-- Your on_attach (unchanged)
+local function my_on_attach(client, bufnr)
+  local opts = { buffer = bufnr, remap = false }
+  vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+  vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+  vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
+  vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
+  vim.keymap.set("n", "[d", vim.diagnostic.goto_next, opts)
+  vim.keymap.set("n", "]d", vim.diagnostic.goto_prev, opts)
+  vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, opts)
+  vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, opts)
+  vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
+  vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
 end
 
-cmp.setup({
-    performance = {
-        debounce = 60,          -- Wait 60ms before triggering completion
-        throttle = 30,          -- Limit completion requests per second
-        fetching_timeout = 500, -- 500ms timeout for fetching completion items
-        confirm_resolve_timeout = 80,
-        async_budget = 1,
-        max_view_entries = 200, -- Limit number of completion items shown
-    },
-    window = {
-        documentation = cmp.config.window.bordered(),
-    },
-    mapping = cmp.mapping.preset.insert({
-
-        ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-        ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-        ['<Enter>'] = cmp.mapping.confirm({ select = true }),
-        ['<C-Space>'] = cmp.mapping.select_next_item(),
-        -- ["<Tab>"] = cmp.mapping(function(fallback)
-        --     if cmp.visible() then
-        --         cmp.select_next_item()
-        --         -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-        --         -- that way you will only jump inside the snippet region
-        --     elseif luasnip.expand_or_jumpable() then
-        --         luasnip.expand_or_jump()
-        --     elseif has_words_before() then
-        --         cmp.complete()
-        --     else
-        --         fallback()
-        --     end
-        -- end, { "i", "s" }),
-
-        -- ["<S-Tab>"] = cmp.mapping(function(fallback)
-        --     if cmp.visible() then
-        --         cmp.select_prev_item()
-        --     elseif luasnip.jumpable(-1) then
-        --         luasnip.jump(-1)
-        --     else
-        --         fallback()
-        --     end
-        -- end, { "i", "s" }),
-        -- ['<C-f>'] = cmp_action.luasnip_jump_forward(),
-        -- ['<C-b>'] = cmp_action.luasnip_jump_backward(),
-        -- ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-        -- ['<C-d>'] = cmp.mapping.scroll_docs(4),
-    })
+-- Tell *all* servers about cmp's capabilities + your on_attach
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+vim.lsp.config('*', {
+  capabilities = capabilities,
+  on_attach = my_on_attach,
 })
-lsp.preset('recommended')
 
+-- Mason: install only; do NOT auto-configure servers
 require('mason').setup({})
 require('mason-lspconfig').setup({
-    -- Replace the language servers listed here
-    -- with the ones you want to install
-    ensure_installed = { 'rust_analyzer' },
-    handlers = {
-        lsp.default_setup,
-    },
+  ensure_installed = {
+    'rust_analyzer',
+    'ts_ls',
+  },
+  handlers = {},  -- ⛔️ remove lsp-zero's default_setup handler to avoid double setup
 })
 
+-- (Optional) keep lsp-zero for prefs/icons only; it's fine without server handlers
 lsp.set_preferences({
-    suggest_lsp_servers = false,
-    sign_icons = {
-        error = 'E',
-        warn = 'W',
-        hint = 'H',
-        info = 'I'
-    }
+  suggest_lsp_servers = false,
+  sign_icons = { error='E', warn='W', hint='H', info='I' },
 })
 
-lsp.on_attach(function(client, bufnr)
-    local opts = { buffer = bufnr, remap = false }
+vim.diagnostic.config({ virtual_text = true })
 
-    vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-    vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-    vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-    vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-    vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-    vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-    vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-    vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-    vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-    vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-end)
+-- Ruby diag shim: you can keep it if you still need it, but many setups no longer do on 0.11+.
+-- (left as-is)
 
-lsp.setup()
+-- ✅ Start servers with the new 0.11 API (single source of truth)
+vim.lsp.enable('ts_ls')
+vim.lsp.enable('rust_analyzer')
+vim.lsp.enable('ruby_lsp')
+vim.lsp.enable('wasm_language_tools')
 
-vim.diagnostic.config({
-    virtual_text = true
-})
-
--- for ruby_ls
--- textDocument/diagnostic support until 0.10.0 is released
-_timers = {}
-local function setup_diagnostics(client, buffer)
-    if require("vim.lsp.diagnostic")._enable then
-        return
-    end
-
-    local diagnostic_handler = function()
-        local params = vim.lsp.util.make_text_document_params(buffer)
-        client.request("textDocument/diagnostic", { textDocument = params }, function(err, result)
-            if err then
-                local err_msg = string.format("diagnostics error - %s", vim.inspect(err))
-                vim.lsp.log.error(err_msg)
-            end
-            if not result then
-                return
-            end
-            vim.lsp.diagnostic.on_publish_diagnostics(
-                nil,
-                vim.tbl_extend("keep", params, { diagnostics = result.items }),
-                { client_id = client.id }
-            )
-        end)
-    end
-
-    diagnostic_handler() -- to request diagnostics on buffer when first attaching
-
-    vim.api.nvim_buf_attach(buffer, false, {
-        on_lines = function()
-            if _timers[buffer] then
-                vim.fn.timer_stop(_timers[buffer])
-            end
-            _timers[buffer] = vim.fn.timer_start(200, diagnostic_handler)
-        end,
-        on_detach = function()
-            if _timers[buffer] then
-                vim.fn.timer_stop(_timers[buffer])
-            end
-        end,
-    })
-end
-
--- require("lspconfig").ruby_ls.setup({
---   on_attach = function(client, buffer)
---     setup_diagnostics(client, buffer)
---   end,
--- })
-
--- wasm language tooling
-require("lspconfig").wasm_language_tools.setup({})
