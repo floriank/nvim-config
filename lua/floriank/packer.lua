@@ -5,8 +5,7 @@ return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
     use {
-        'nvim-telescope/telescope.nvim', tag = '0.1.2',
-        -- or                            , branch = '0.1.x',
+        'nvim-telescope/telescope.nvim', branch = '0.1.x',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
     use('benfowler/telescope-luasnip.nvim')
@@ -19,15 +18,10 @@ return require('packer').startup(function(use)
     })
 
     -- treesitter for syntax highlighting
-    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
     use {
         "romgrk/nvim-treesitter-context",
         after = "nvim-treesitter", -- Load after Tree-sitter
-        config = function()
-            require("treesitter-context").setup {
-                enable = true, -- Enable Tree-sitter-context
-            }
-        end,
     }
     -- use('nvim-treesitter/playground')
 
@@ -52,21 +46,14 @@ return require('packer').startup(function(use)
     use('knsh14/vim-github-link')
 
     -- LSP integration
-    use {
-        'VonHeikemen/lsp-zero.nvim',
-        branch = 'v2.x',
-        requires = {
-            -- LSP Support
-            { 'neovim/nvim-lspconfig' },             -- Required
-            { 'williamboman/mason.nvim' },           -- Optional
-            { 'williamboman/mason-lspconfig.nvim' }, -- Optional
+    use 'neovim/nvim-lspconfig'
+    use 'williamboman/mason.nvim'
+    use 'williamboman/mason-lspconfig.nvim'
 
-            -- Autocompletion
-            { 'hrsh7th/nvim-cmp' },     -- Required
-            { 'hrsh7th/cmp-nvim-lsp' }, -- Required
-            { 'saadparwaiz1/cmp_luasnip' }
-        }
-    }
+    -- Autocompletion
+    use 'hrsh7th/nvim-cmp'
+    use 'hrsh7th/cmp-nvim-lsp'
+    use 'saadparwaiz1/cmp_luasnip'
 
     -- snippets
     use { 'L3MON4D3/LuaSnip', requires = { 'rafamadriz/friendly-snippets' } }
@@ -84,8 +71,6 @@ return require('packer').startup(function(use)
     -- hardtime
     use {
         "m4xshen/hardtime.nvim",
-        lazy = false,
         requires = { "MunifTanjim/nui.nvim" },
-        opts = {},
     }
 end)

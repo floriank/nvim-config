@@ -2,10 +2,6 @@
 local cmp = require('cmp')
 local luasnip = require('luasnip')
 
--- OPTIONAL: if you still want lsp-zero for icons/prefs, that's fine,
--- but don't let it configure servers. We'll remove its handlers below.
-local lsp = require('lsp-zero')
-
 -- nvim-cmp
 cmp.setup({
   performance = {
@@ -34,26 +30,26 @@ cmp.setup({
   },
 })
 
--- Your on_attach (unchanged)
-local function my_on_attach(client, bufnr)
-  local opts = { buffer = bufnr, remap = false }
-  vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-  vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
-  vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
-  vim.keymap.set("n", "[d", vim.diagnostic.goto_next, opts)
-  vim.keymap.set("n", "]d", vim.diagnostic.goto_prev, opts)
-  vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, opts)
-  vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, opts)
-  vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
-  vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
-end
+-- LspAttach fires after every server attaches, regardless of per-server on_attach overrides
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local opts = { buffer = args.buf, remap = false }
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
+    vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
+    vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
+    vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, opts)
+    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+    vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, opts)
+    vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
+    vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
+  end,
+})
 
--- Tell *all* servers about cmp's capabilities + your on_attach
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 vim.lsp.config('*', {
   capabilities = capabilities,
-  on_attach = my_on_attach,
 })
 
 -- Mason: install only; do NOT auto-configure servers
@@ -63,23 +59,33 @@ require('mason-lspconfig').setup({
     'rust_analyzer',
     'ts_ls',
   },
-  handlers = {},  -- ⛔️ remove lsp-zero's default_setup handler to avoid double setup
 })
 
--- (Optional) keep lsp-zero for prefs/icons only; it's fine without server handlers
-lsp.set_preferences({
-  suggest_lsp_servers = false,
-  sign_icons = { error='E', warn='W', hint='H', info='I' },
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = 'E',
+      [vim.diagnostic.severity.WARN] = 'W',
+      [vim.diagnostic.severity.HINT] = 'H',
+      [vim.diagnostic.severity.INFO] = 'I',
+    },
+  },
 })
-
-vim.diagnostic.config({ virtual_text = true })
 
 -- Ruby diag shim: you can keep it if you still need it, but many setups no longer do on 0.11+.
 -- (left as-is)
+
+-- knowledge-lsp: custom knowledge server (not in Mason/lspconfig)
+vim.lsp.config('knowledge_lsp', {
+  cmd = { 'knowledge-lsp' },
+  filetypes = { '*' },
+})
 
 -- ✅ Start servers with the new 0.11 API (single source of truth)
 vim.lsp.enable('ts_ls')
 vim.lsp.enable('rust_analyzer')
 vim.lsp.enable('ruby_lsp')
 vim.lsp.enable('wasm_language_tools')
+vim.lsp.enable('knowledge_lsp')
 
