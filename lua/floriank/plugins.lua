@@ -2,7 +2,8 @@ return {
     -- telescope
     {
         "nvim-telescope/telescope.nvim",
-        branch = "0.1.x",
+        -- 0.1.x calls the removed nvim-treesitter.configs API; master uses vim.treesitter
+        branch = "master",
         dependencies = { "nvim-lua/plenary.nvim" },
     },
     "benfowler/telescope-luasnip.nvim",
