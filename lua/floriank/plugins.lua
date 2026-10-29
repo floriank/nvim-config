@@ -33,6 +33,12 @@ return {
     -- better undo history
     "mbbill/undotree",
 
+    -- multiple cursors, sublime style
+    {
+        "jake-stewart/multicursor.nvim",
+        branch = "1.0",
+    },
+
     -- the tpope section
     "tpope/vim-fugitive",
     "tpope/vim-surround",
